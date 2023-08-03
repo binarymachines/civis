@@ -142,11 +142,11 @@ maps:
 
       - party:
 
-      - initial_registration_date:
+      - initial_reg_date:
           source: record
           key: Registration Date
 
-      - last_registration_date:
+      - last_reg_date:
           source: record
           key: Last Registration Date
 
