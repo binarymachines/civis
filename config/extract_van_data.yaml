@@ -79,8 +79,8 @@ maps:
       - P_05_05_2009:
       - S_02_03_2009:
       - SG_12_23_2008:
-      - SG_11_18_2008_144:
-      - SP_11_18_2008_146:
+      - SG_11_18_2008_144: # runoff? 
+      - SP_11_18_2008_146: 
       - SG_11_18_2008_148:
       - G_11_04_2008:
       - SP_10_14_2008:
@@ -154,13 +154,16 @@ maps:
           source: record
           key: house_no
 
-      - pre_dir:
+      - direction_prefix:
+          source: record
+          key: pre_dir
 
       - street:
       - apartment:
       - zip:
       - birth_date:
-      - source:
+
+      - reg_info_source:
           source: record
           key: Source
 
@@ -184,7 +187,7 @@ maps:
           source: record
           key: JUD
 
-      - city_council_district:
+      - county_council_district:
           source: record
           key: CCD
 

@@ -9,6 +9,7 @@ Usage:
 
 import os, sys
 import docopt
+from plumbum import local
 
 
 def main(args):
@@ -31,6 +32,12 @@ def main(args):
                 code_string = args['<codestr>']
 
             exec(code_string)
+
+        elif args['--sh']:
+
+            script_path = args['<file>']
+            local()
+
 
 
 
