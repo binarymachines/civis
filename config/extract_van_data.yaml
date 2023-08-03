@@ -1,0 +1,191 @@
+
+globals:
+  project_home: CVX_HOME
+  service_module: cvx_services
+  datasource_module: cvx_datasources
+  macro_module: cvx_macros
+
+service_objects:
+
+sources:
+  civix_src:
+    class: CivixDatasource
+
+maps:
+
+  voting_history:
+    settings:
+
+    lookup_source:
+      civix_src
+
+    fields:
+      - voter_id_org:
+      - P_05_02_2023:
+      - G_11_08_2022:
+      - P_08_02_2022:
+      - P_05_03_2022:
+      - G_11_02_2021:
+      - P_09_14_2021:
+      - P_08_03_2021:
+      - P_05_04_2021:
+      - S_03_16_2021:
+      - S_02_23_2021:
+      - G_11_03_2020:
+      - S_08_04_2020:
+      - P_03_17_2020:
+      - G_11_05_2019:
+      - P_09_10_2019:
+      - P_05_07_2019:
+      - G_11_06_2018:
+      - P_05_08_2018:
+      - S_12_05_2017:
+      - G_11_07_2017:
+      - P_05_02_2017:
+      - S_12_06_2016:
+      - G_11_08_2016:
+      - S_08_02_2016:
+      - S_06_21_2016:
+      - P_03_15_2016:
+      - S_12_08_2015:
+      - G_11_03_2015:
+      - P_09_08_2015:
+      - P_05_05_2015:
+      - S_02_03_2015:
+      - G_11_04_2014:
+      - S_09_23_2014:
+      - S_08_05_2014:
+      - P_05_06_2014:
+      - G_11_05_2013:
+      - P_10_01_2013:
+      - P_09_10_2013:
+      - S_08_06_2013:
+      - P_05_07_2013:
+      - G_11_06_2012:
+      - S_08_07_2012:
+      - P_03_06_2012:
+      - G_11_08_2011:
+      - P_09_13_2011:
+      - S_08_02_2011:
+      - P_05_03_2011:
+      - S_02_08_2011:
+      - G_11_02_2010:
+      - P_09_07_2010:
+      - S_08_03_2010:
+      - P_05_04_2010:
+      - G_11_03_2009:
+      - P_09_29_2009:
+      - P_09_08_2009:
+      - P_05_05_2009:
+      - S_02_03_2009:
+      - SG_12_23_2008:
+      - SG_11_18_2008_144:
+      - SP_11_18_2008_146:
+      - SG_11_18_2008_148:
+      - G_11_04_2008:
+      - SP_10_14_2008:
+      - S_08_05_2008:
+      - SG_04_22_2008:
+      - P_03_04_2008:
+      - SG_12_18_2007:
+      - G_11_06_2007:
+      - P_10_02_2007:
+      - P_09_25_2007:
+      - P_09_18_2007:
+      - P_09_11_2007:
+      - S_08_07_2007:
+      - SG_07_03_2007:
+      - P_05_08_2007:
+      - G_11_07_2006:
+      - S_02_06_2007:
+      - S_08_08_2006:
+      - P_05_02_2006:
+      - S_02_07_2006:
+
+  voters:
+    settings:
+
+    lookup_source:
+      civix_src
+
+    fields:
+      - voter_id_org:
+
+      - state_id:
+          source: record
+          key: STATE_ID
+
+      - city:
+      - ward:
+
+      - precinct:
+          source: record
+          key: pct
+
+      - last_name:
+          source: record
+          key: name_last
+
+      - first_name: 
+          source: record
+          key: name_first
+
+      - middle_name:
+          source: record
+          key: name_middle
+
+      - name_suffix:
+
+      - voter_status:
+          source: record
+          key: Status
+
+      - party:
+
+      - initial_registration_date:
+          source: record
+          key: Registration Date
+
+      - last_registration_date:
+          source: record
+          key: Last Registration Date
+
+      - house_number:
+          source: record
+          key: house_no
+
+      - pre_dir:
+
+      - street:
+      - apartment:
+      - zip:
+      - birth_date:
+      - source:
+          source: record
+          key: Source
+
+      - school_district:
+          source: record
+          key: scd
+
+      - congressional_district:
+          source: record
+          key: CONG
+
+      - house_district:
+          source: record
+          key: HSE
+
+      - senate_district:
+          source: record
+          key: SEN
+
+      - judicial_district:
+          source: record
+          key: JUD
+
+      - city_council_district:
+          source: record
+          key: CCD
+
+
