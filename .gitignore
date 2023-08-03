@@ -1,4 +1,6 @@
 temp_data
+temp_scripts
+temp_sql
 data
 *.log
 env_setup/
