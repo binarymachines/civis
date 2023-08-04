@@ -1,0 +1,6 @@
+
+TRUNCATE TABLE dim_date_day CASCADE;
+TRUNCATE TABLE dim_date_month CASCADE;
+TRUNCATE TABLE dim_date_year CASCADE;
+TRUNCATE TABLE dim_election_type CASCADE;
+

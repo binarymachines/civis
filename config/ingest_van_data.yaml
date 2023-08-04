@@ -1,0 +1,49 @@
+
+globals:
+  project_home: CVX_HOME
+  service_module: cvx_services
+  datasource_module: cvx_datasources
+  macro_module: cvx_macros
+
+
+service_objects:
+
+  postgres:
+      class: PostgreSQLService
+      init_params:
+        - name: host
+          value: localhost
+    
+        - name: port
+          value: 5432
+    
+        - name: dbname
+          value: civix
+
+        - name: schema
+          value: public
+    
+        - name: username
+          value: $CVX_DBA_USER
+    
+        - name: password
+          value: $CVX_DBA_PASSWORD
+
+        - name: connect_timeout
+          value: 5
+
+
+datastores:
+
+  db:
+    class: PostgresDatastore
+    init_params:
+        
+    channel_select_function: 
+    channels:
+        
+
+ingest_targets:
+  db:
+    datastore: db
+    checkpoint_interval: 1000

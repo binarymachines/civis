@@ -161,7 +161,9 @@ maps:
       - street:
       - apartment:
       - zip:
-      - birth_date:
+      - birth_year:
+          source: record
+          key: birth_date
 
       - reg_info_source:
           source: record
