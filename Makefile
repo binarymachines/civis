@@ -63,12 +63,15 @@ db-drop-tables:
 db-purge-olap: db-purge-dimensions db-purge-facts
 
 
-pipeline-voter-data:
+prep-voter-data:
 	xfile --config config/extract_van_data.yaml --delimiter ',' --map voters static_data/ohio_rvht.csv \
 	> temp_data/voter_data.json
 
-	cat temp_data/voter_data.json | ngst --config config/ingest_van_data.yaml --target db --params=record_type:voter \
-	> temp_data/voter_id_map.jsonl
+ingest-voter-data:
+	cat temp_data/voter_data.json | ngst --config config/ingest_van_data.yaml --target db --params=record_type:voter 
+	# > temp_data/voter_id_map.jsonl
+
+pipeline-voter-data: prep-voter-data ingest-voter-data
 
 
 pipeline-voting-history:

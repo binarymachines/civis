@@ -47,9 +47,17 @@ class PostgresDatastore(DataStore):
 
         new_id = None
 
+        voter_record.pop('party')
+        voter_record['id'] = str(uuid.uuid4())
+
+        apt_string = voter_record.get('apartment', '')
+        if apt_string is not None:
+            voter_record['apartment'] = apt_string.strip()
+       
+
         with db_service.txn_scope() as session:
 
-            db_rec = ObjectFactory.create_db_object('voter', db_service, **voter_record)
+            db_rec = ObjectFactory.create_db_object('voters', db_service, **voter_record)
             session.add(db_rec)
             session.flush()
             new_id = str(db_rec.id)

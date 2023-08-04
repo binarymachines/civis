@@ -109,7 +109,9 @@ maps:
       civix_src
 
     fields:
-      - voter_id_org:
+      - van_id:
+          source: record
+          key: voter_id_org
 
       - state_id:
           source: record
@@ -173,7 +175,7 @@ maps:
           source: record
           key: scd
 
-      - congressional_district:
+      - congress_district:
           source: record
           key: CONG
 

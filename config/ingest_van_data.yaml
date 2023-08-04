@@ -2,7 +2,7 @@
 globals:
   project_home: CVX_HOME
   service_module: cvx_services
-  datasource_module: cvx_datasources
+  datastore_module: cvx_datastores
   macro_module: cvx_macros
 
 
