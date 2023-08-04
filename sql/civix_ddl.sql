@@ -1,7 +1,7 @@
 CREATE TABLE "dim_date_day" (
   "id" int4 NOT NULL,
-  "value" int2,
-  "label" varchar(4),
+  "value" int2 NOT NULL,
+  "label" varchar(4) NOT NULL,
   PRIMARY KEY ("id")
 );
 
@@ -14,40 +14,15 @@ CREATE TABLE "dim_date_month" (
 
 CREATE TABLE "dim_date_year" (
   "id" int4 NOT NULL,
-  "value" varchar(255),
-  "label" varchar(255),
-  PRIMARY KEY ("id")
-);
-
-CREATE TABLE "dim_district" (
-  "id" int4 NOT NULL,
-  "value" varchar(8),
-  "label" varchar(8),
+  "value" int2 NOT NULL,
+  "label" varchar(4) NOT NULL,
   PRIMARY KEY ("id")
 );
 
 CREATE TABLE "dim_election_type" (
   "id" int4 NOT NULL,
-  "value " varchar(8),
-  "label" varchar(16),
-  PRIMARY KEY ("id")
-);
-
-CREATE TABLE "dim_precinct" (
-  "id" int4 NOT NULL,
-  "value" varchar(8),
-  "label" varchar(8),
-  PRIMARY KEY ("id")
-);
-
-CREATE TABLE "dim_state" (
-
-);
-
-CREATE TABLE "dim_ward" (
-  "id" int4 NOT NULL,
-  "value" varchar(6),
-  "label" varchar(16),
+  "value" varchar(8) NOT NULL,
+  "label" varchar(16) NOT NULL,
   PRIMARY KEY ("id")
 );
 
@@ -55,11 +30,11 @@ CREATE TABLE "fact_vote" (
   "id" uuid NOT NULL,
   "voter_id" uuid NOT NULL,
   "van_id" varchar(32) NOT NULL,
+  "ref_party_id" int2,
   "event_datestamp" date,
-  "dim_election_type_id" int4,
-  "dim_district_id" int4,
-  "dim_precinct_id" int4,
-  "dim_ward_id" int4,
+  "precinct" varchar(6),
+  "ward" varchar(6),
+  "dim_election_type_id" int2,
   "dim_date_month_id" int4,
   "dim_date_day_id" int4,
   "dim_date_year_id" int4,
@@ -67,8 +42,11 @@ CREATE TABLE "fact_vote" (
 );
 COMMENT ON COLUMN "fact_vote"."id" IS ' ';
 
-CREATE TABLE "ref_district_id" (
-
+CREATE TABLE "ref_party" (
+  "id" int4 NOT NULL,
+  "value" varchar(6) NOT NULL,
+  "label" varchar(32),
+  PRIMARY KEY ("id")
 );
 
 CREATE TABLE "voters" (
@@ -78,8 +56,9 @@ CREATE TABLE "voters" (
   "middle_name" varchar(32),
   "last_name" varchar(32),
   "name_suffix" varchar(10),
+  "birth_year" int2,
   "voter_status" varchar(6),
-  "party" varchar(6),
+  "ref_party_id" int2,
   "initial_reg_date" date,
   "last_reg_date" date,
   "house_number" int4,

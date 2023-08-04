@@ -30,7 +30,7 @@ db-generate-dim-data:
 	dgenr8 --plugin-module dim_year_generator --sql --schema public --dim-table dim_date_year --columns id value label \
 	>> temp_sql/dimension_data.sql
 
-	dgenr8 --plugin-module dim_election_type_generator --sql --schema public --dim-table dim_permit_type --columns id value label \
+	dgenr8 --plugin-module dim_election_type_generator --sql --schema public --dim-table dim_election_type --columns id value label \
 	>> temp_sql/dimension_data.sql
 
 	dgenr8 --plugin-module ref_party_generator --sql --schema public --dim-table ref_party --columns id value label \
@@ -47,13 +47,17 @@ db-populate-dimensions:
 
 
 db-purge-dimensions:
-	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -w -U $$CVX_DBA_USER -d $$CVX_DB -h $$CVX_DB_HOST -p $$CVX_DB_PORT \
+	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -h localhost -U cvxdba -d civix \
 	--file=sql/truncate_dimension_tables.sql
 
 
 db-purge-facts:
-	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -w -U $$CVX_DBA_USER -d $$CVX_DB -h $$CVX_DB_HOST -p $$CVX_DB_PORT \
+	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -h localhost -U cvxdba -d civix \
 	--file=sql/truncate_fact_tables.sql
+
+db-drop-tables:
+	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -h localhost -U cvxdba -d civix \
+	--file=sql/drop_all_tables.sql
 
 
 db-purge-olap: db-purge-dimensions db-purge-facts

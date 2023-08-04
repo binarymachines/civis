@@ -14,5 +14,5 @@ types = {
 def line_array_generator(**kwargs):    
     id = 1
     for abbrev, label in types.items():
-        yield [id, abbrev, label]
+        yield [id, f"'{abbrev}'", f"'{label}'"]
         id += 1
