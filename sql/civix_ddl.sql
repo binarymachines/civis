@@ -51,7 +51,7 @@ CREATE TABLE "ref_party" (
 
 CREATE TABLE "voters" (
   "id" uuid NOT NULL,
-  "voter_id_org" varchar(32) NOT NULL,
+  "van_id" varchar(32) NOT NULL,
   "first_name" varchar(32),
   "middle_name" varchar(32),
   "last_name" varchar(32),

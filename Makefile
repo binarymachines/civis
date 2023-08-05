@@ -74,6 +74,16 @@ prep-voter-data:
 	xfile --config config/extract_van_data.yaml --delimiter ',' --map voters static_data/ohio_rvht.csv \
 	> temp_data/voter_data.json
 
+
+prep-voting-history-data:
+	xfile --config config/extract_van_data.yaml --delimiter ',' --map voting_history static_data/ohio_rvht.csv \
+	> temp_data/voting_history_data.json
+
+merge-recordsets:
+	scripts/subrec2field.py --parent temp_data/voter_data.json --child temp_data/voting_history_data.json \
+	--field history > temp_data/voter_dataset.json
+
+
 ingest-voter-data:
 
 	#_______________________________________________________________________
@@ -90,7 +100,7 @@ ingest-voter-data:
 	#_______________________________________________________________________
 	#
 
-	chunkr --records temp_data/voter_data.json --chunks 8 --pfx chunked_voter_data --ext jsonl -t temp_data \
+	chunkr --records temp_data/voter_dataset.json --chunks 8 --pfx chunked_voter_data --ext jsonl -t temp_data \
 	> temp_data/chunked_voter_data_files.txt
 
 	#_______________________________________________________________________
@@ -101,7 +111,7 @@ ingest-voter-data:
 	#
 
 	loopr -p -t --listfile temp_data/chunked_voter_data_files.txt --vartoken % \
-	--cmd-string 'ngst --config config/ingest_van_data.yaml --target db --datafile temp_data/% --params=record_type:voter'\
+	--cmd-string 'ngst --config config/ingest_van_data.yaml --target db --datafile temp_data/% --params=record_type:voter' \
 	> temp_data/voter_data_ingest_commands.txt
 
 	#_______________________________________________________________________
@@ -147,17 +157,9 @@ ingest-voter-data:
 	time temp_scripts/ingest_voter_data.sh
 
 
+pipeline-voter-data: prep-voter-data prep-voting_history_data merge-recordsets ingest-voter-data
 
-pipeline-voter-data: prep-voter-data ingest-voter-data
 
-
-prep-voting-history-data:
-
-	xfile --config config/extract_van_data.yaml --delimiter ',' --map voting_history static_data/ohio_rvht.csv \
-	> temp_data/voting_history_data.json
-
-pipeline-voting-history:
-	
-
-	cat temp_data/voting_history_data.json | ngst --config config/ingest_van_data.yaml --target db \
-	--params=record_type:voting_history > temp_data/voter_id_map.jsonl
+test-ingest: 
+	 ngst --config config/ingest_van_data.yaml --target db --datafile temp_data/voter_dataset.json \
+	 --params=record_type:voter --limit=3

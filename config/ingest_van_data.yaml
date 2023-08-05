@@ -8,6 +8,33 @@ globals:
 
 service_objects:
 
+  olap:
+    class: OLAPDimensionSvc
+    init_params:
+      - name: host
+        value: localhost
+  
+      - name: port
+        value: 5432
+  
+      - name: dbname
+        value: civix
+
+      - name: schema
+        value: public
+  
+      - name: username
+        value: $CVX_DBA_USER
+  
+      - name: password
+        value: $CVX_DBA_PASSWORD
+
+      - name: connect_timeout
+        value: 5
+
+      - name: dimension_tables
+        value: [dim_date_day, dim_date_month, dim_date_year, dim_election_type]
+
   postgres:
       class: PostgreSQLService
       init_params:
