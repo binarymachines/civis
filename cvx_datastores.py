@@ -8,12 +8,12 @@ from mercury.mlog import mlog, mlog_err
 
 '''
 date_month = date_tokens[0]
-        date_day = date_tokens[1]
-        date_year = date_tokens[2]
+date_day = date_tokens[1]
+date_year = date_tokens[2]
 
-        day_id = olap.dim_id_for_value('dim_date_day', int(date_day))
-        month_id = olap.dim_id_for_value('dim_date_month', int(date_month))
-        year_id = olap.dim_id_for_value('dim_date_year', int(date_year))
+day_id = olap.dim_id_for_value('dim_date_day', int(date_day))
+month_id = olap.dim_id_for_value('dim_date_month', int(date_month))
+year_id = olap.dim_id_for_value('dim_date_year', int(date_year))
 
 '''
 
@@ -76,7 +76,16 @@ class PostgresDatastore(DataStore):
 
             if record_type == 'voter':
                 try:
-                    id = self.write_voter_data(rec, postgres_svc)
+                    self.write_voter_data(rec, postgres_svc)
+
+                    """
+                    output_rec = {                        
+                        'van_record_id': rec['voter_id_org'], # TODO: change to van_id on next full ingest
+                        'voter_id': id
+                    }
+
+                    print(json.dumps(output_rec))
+                    """
                     
                 except Exception as err:
                     mlog_err(err, issue=f"Error ingesting voter record.", record=rec)

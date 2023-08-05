@@ -1,5 +1,12 @@
 
 
+	#_______________________________________________________________________
+	#
+	# 
+	#_______________________________________________________________________
+	#
+
+
 init-dirs:
 	cat required_dirs.txt | xargs mkdir -p
 
@@ -68,15 +75,89 @@ prep-voter-data:
 	> temp_data/voter_data.json
 
 ingest-voter-data:
-	cat temp_data/voter_data.json | ngst --config config/ingest_van_data.yaml --target db --params=record_type:voter 
-	# > temp_data/voter_id_map.jsonl
+
+	#_______________________________________________________________________
+	#
+	# clean up any chunkfiles from previous runs 
+	#_______________________________________________________________________
+	#
+
+	rm temp_data/chunked_*
+
+	#_______________________________________________________________________
+	#
+	# chunk the voter-data JSON records for parallel ingest
+	#_______________________________________________________________________
+	#
+
+	chunkr --records temp_data/voter_data.json --chunks 8 --pfx chunked_voter_data --ext jsonl -t temp_data \
+	> temp_data/chunked_voter_data_files.txt
+
+	#_______________________________________________________________________
+	#
+	# loop over the emitted list of chunkfiles 
+	# to generate our ingestion commands
+	#_______________________________________________________________________
+	#
+
+	loopr -p -t --listfile temp_data/chunked_voter_data_files.txt --vartoken % \
+	--cmd-string 'ngst --config config/ingest_van_data.yaml --target db --datafile temp_data/% --params=record_type:voter'\
+	> temp_data/voter_data_ingest_commands.txt
+
+	#_______________________________________________________________________
+	#
+	# generate the list of output files 
+	#_______________________________________________________________________
+	#
+
+	countup --from 1 --to `wc -l temp_data/chunked_voter_data_files.txt` > temp_data/chunk_index.txt
+
+	loopr -p -t --listfile temp_data/chunk_index.txt --vartoken % \
+	--cmd-string 'voter_id_map_chunk_%.jsonl' > temp_data/voter_data_ingest_outfiles.txt
+
+	#_______________________________________________________________________
+	#
+	# generate our ingestion command manifest
+	#_______________________________________________________________________
+	#
+
+	tuplegen --delim ',' --listfiles=temp_data/voter_data_ingest_commands.txt,temp_data/voter_data_ingest_outfiles.txt \
+	| tuple2json --delim ',' --keys=command,outfile > temp_data/voter_data_ingest_manifest.jsonl
+
+	#_______________________________________________________________________
+	#
+	# populate the shell script
+	#_______________________________________________________________________
+	#
+
+	cp template_files/shell_script_core.sh.tpl temp_scripts/ingest_voter_data.sh
+
+	loopr -p -j --listfile temp_data/voter_data_ingest_manifest.jsonl \
+	--cmd-string '{command} > {outfile} &' >> temp_scripts/ingest_voter_data.sh
+
+	echo 'wait' >> temp_scripts/ingest_voter_data.sh
+
+	#_______________________________________________________________________
+	#
+	# set permissions and execute
+	#_______________________________________________________________________
+	#
+
+	chmod u+x temp_scripts/ingest_voter_data.sh
+	time temp_scripts/ingest_voter_data.sh
+
+
 
 pipeline-voter-data: prep-voter-data ingest-voter-data
 
 
-pipeline-voting-history:
+prep-voting-history-data:
+
 	xfile --config config/extract_van_data.yaml --delimiter ',' --map voting_history static_data/ohio_rvht.csv \
 	> temp_data/voting_history_data.json
+
+pipeline-voting-history:
+	
 
 	cat temp_data/voting_history_data.json | ngst --config config/ingest_van_data.yaml --target db \
 	--params=record_type:voting_history > temp_data/voter_id_map.jsonl
