@@ -22,7 +22,8 @@ year_id = olap.dim_id_for_value('dim_date_year', int(date_year))
 REF_PARTY_LOOKUP = {
     'DEM': 1,
     'REP': 2,
-    'NOPTY': 3 
+    'LIB': 3,
+    'NOPTY': 4
 }
 
 VotingEvent = namedtuple('VotingEvent', 'election_date election_type')
@@ -96,31 +97,28 @@ class PostgresDatastore(DataStore):
             if voted is None:
                 continue
 
-            voted_y_n = voted.strip()
-            if not len(voted_y_n):
+            code = voted.strip()
+            if not code:
                 continue
             else:
-                
-                did_vote = utils.to_boolean(voted_y_n)
-                if did_vote:
+                vote_event = self.get_voting_event(election)
 
-                    vote_event = self.get_voting_event(election)
+                vote_fact_rec = {
+                    'id': uuid.uuid4(),
+                    'voter_id': voter_db_record.id,
+                    'van_id': voter_db_record.van_id,
+                    'event_code': code,
+                    'ref_party_id': voter_db_record.ref_party_id,
+                    'event_datestamp': vote_event.election_date,
+                    'precinct': voter_db_record.precinct,
+                    'ward': voter_db_record.ward,
+                    'dim_election_type_id': self.lookup_election_type_id(vote_event.election_type)
+                }
 
-                    vote_fact_rec = {
-                        'id': uuid.uuid4(),
-                        'voter_id': voter_db_record.id,
-                        'van_id': voter_db_record.van_id,
-                        'ref_party_id': voter_db_record.ref_party_id,
-                        'event_datestamp': vote_event.election_date,
-                        'precinct': voter_db_record.precinct,
-                        'ward': voter_db_record.ward,
-                        'dim_election_type_id': self.lookup_election_type_id(vote_event.election_type)
-                    }
-
-                    vote_fact_rec.update(self.lookup_date_dimensions(vote_event.election_date))
-                    with db_service.txn_scope() as session:
-                        db_rec = ObjectFactory.create_db_object('fact_vote', db_service, **vote_fact_rec)
-                        session.add(db_rec)
+                vote_fact_rec.update(self.lookup_date_dimensions(vote_event.election_date))
+                with db_service.txn_scope() as session:
+                    db_rec = ObjectFactory.create_db_object('fact_vote', db_service, **vote_fact_rec)
+                    session.add(db_rec)
 
 
     def write_voter_data(self, voter_record, db_service, **write_params):

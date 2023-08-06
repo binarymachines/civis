@@ -1,0 +1,28 @@
+globals:
+  project_home: CVX_HOME
+  service_module: cvx_services
+  datasource_module: cvx_datasources
+  macro_module: cvx_macros
+
+
+service_objects:
+
+
+
+targets:
+
+  geocode_OH:
+    url: https://places.geo.us-east-2.amazonaws.com/places/v0/indexes/ohio_test/search/text
+    method: POST
+    headers:
+      Content-type: application/json
+      X-Amz-Security-Token: IQoJb3JpZ2luX2VjEKj//////////wEaCXVzLWVhc3QtMiJHMEUCIBhbXfX2MXIb+iA1z92WYZWEFWRtpTumetc6DADaz32IAiEAmwzf5a1jnHppugW6QNfL9bOuZ37uaOJTxrftBsPiQf0q6wEIURAAGgw1NDM2ODA4MDE3MTIiDKHwBpREXw8FcpgirCrIAYp2DfBH+IJ6Jfmh68cQMRp925gdgrMRp3a75f6NVp8KAjoA5JJMnU1LxGa+msoz3yJyrgXTtj2L0epKr8JrRBPTmUmPfffhItkT4zB0h0quJ8L3ISf0vsbDS5Un7AJ/W/U4L9QtD8265enybluulkOdVCgWokzq3ApKDpAekjkNp7ZLzflmCzIKBWeKfTA5sOGQW9sH+7bdNWwbBfwmksvVHtBlRMnCWlLnCQOrLqJxMm3np/iplOBOS38x+QiQwRIQfH+c0cnuMK3Hu6YGOpgBuu4Re2fozHPlP0R/efxJRtSZifXJGJQgexLCcNCoeG07L/V/L8woKeValJoyxAyg/Q+QFOYnOZboF8WrFO/gvKBPPDjdySbIzAVz/oyvQUaEn21pt96OpqPAJswXsblfYLR540SBQz1ABpSpyj41PHytFdEkr7wzeuriv7qgvigKQ1Z0tgkivs6j8Q3alc+PUBuqdKfVLSw=
+
+    request_params:
+      - name: text
+        value: '21999 CALVERTON RD, OH 44122'
+
+      - name: key
+        value: $AMZN_GEO_API_KEY
+
+

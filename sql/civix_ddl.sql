@@ -30,6 +30,7 @@ CREATE TABLE "fact_vote" (
   "id" uuid NOT NULL,
   "voter_id" uuid NOT NULL,
   "van_id" varchar(32) NOT NULL,
+  "event_code" varchar(6),
   "ref_party_id" int2,
   "event_datestamp" date,
   "precinct" varchar(6),
@@ -40,7 +41,7 @@ CREATE TABLE "fact_vote" (
   "dim_date_year_id" int4,
   PRIMARY KEY ("id")
 );
-COMMENT ON COLUMN "fact_vote"."id" IS ' ';
+
 
 CREATE TABLE "ref_party" (
   "id" int4 NOT NULL,

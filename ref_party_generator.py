@@ -8,6 +8,7 @@
 p_types = [
     {'abbrev': 'DEM', 'desc': 'Democratic'},
     {'abbrev': 'REP', 'desc': 'Republican'},
+    {'abbrev': 'LIB', 'desc': 'Libertarian'},
     {'abbrev': 'NOPTY', 'desc': 'No Party'},
 ]
 

@@ -1,5 +1,7 @@
 
 
+#### Makefile for civiX voter data analysis platform
+
 	#_______________________________________________________________________
 	#
 	# 
@@ -86,6 +88,7 @@ merge-recordsets:
 
 ingest-voter-data:
 
+	$(eval CHUNK_SIZE=5)
 	#_______________________________________________________________________
 	#
 	# clean up any chunkfiles from previous runs 
@@ -100,7 +103,7 @@ ingest-voter-data:
 	#_______________________________________________________________________
 	#
 
-	chunkr --records temp_data/voter_dataset.json --chunks 8 --pfx chunked_voter_data --ext jsonl -t temp_data \
+	chunkr --records temp_data/voter_dataset.json --chunks $(CHUNK_SIZE) --pfx chunked_voter_data --ext jsonl -t temp_data \
 	> temp_data/chunked_voter_data_files.txt
 
 	#_______________________________________________________________________
@@ -120,7 +123,7 @@ ingest-voter-data:
 	#_______________________________________________________________________
 	#
 
-	countup --from 1 --to `wc -l temp_data/chunked_voter_data_files.txt` > temp_data/chunk_index.txt
+	countup --from 1 --to $(CHUNK_SIZE) > temp_data/chunk_index.txt
 
 	loopr -p -t --listfile temp_data/chunk_index.txt --vartoken % \
 	--cmd-string 'voter_id_map_chunk_%.jsonl' > temp_data/voter_data_ingest_outfiles.txt
@@ -157,9 +160,7 @@ ingest-voter-data:
 	time temp_scripts/ingest_voter_data.sh
 
 
-pipeline-voter-data: prep-voter-data prep-voting_history_data merge-recordsets ingest-voter-data
+pipeline-voter-data: prep-voter-data prep-voting-history-data merge-recordsets ingest-voter-data
 
 
-test-ingest: 
-	 ngst --config config/ingest_van_data.yaml --target db --datafile temp_data/voter_dataset.json \
-	 --params=record_type:voter --limit=3
+test-ingest: ingest-voter-data
