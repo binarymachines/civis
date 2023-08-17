@@ -17,6 +17,7 @@ gen-dba-script:
 	warp --py --template-file=template_files/mkdbauser.sql.tpl --params=name:cvxdba,description:Administrator,pw:notobvious \
 	> temp_sql/create_dba_role.sql
 
+
 dblogin:
 	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -h localhost -U cvxdba -d civix
 
@@ -164,3 +165,16 @@ pipeline-voter-data: prep-voter-data prep-voting-history-data merge-recordsets i
 
 
 test-ingest: ingest-voter-data
+
+
+report:
+	export PGPASSWORD=$$CVX_DBA_PASSWORD && psql -h localhost -U cvxdba -d civix -F ',' -A -f sql/top_voters_qry.sql \
+	-o /tmp/report_output.csv
+
+
+report-test:
+	$(eval REPORTFILE=$(shell warp --py --template=cvx_templates.prime_voters_rpt_filename --macros=cvx_macros --params=timestamp:~macro[now]))
+	$(eval PARTY_ID=3)
+
+	warp  --py --template-file=template_files/top_voters_qry.sql.tpl --params=party_id:$(PARTY_ID) \
+	> data/$(REPORTFILE)

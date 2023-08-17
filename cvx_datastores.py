@@ -80,8 +80,6 @@ class PostgresDatastore(DataStore):
         olap_svc = self.service_object_registry.lookup('olap')
         tokens = election_date_str.split('-')
 
-        print(f'####### Looking up dimension value for date string: {election_date_str}...')
-
         return {
             'dim_date_day_id': olap_svc.dim_id_for_value('dim_date_day', int(tokens[1])),
             'dim_date_month_id': olap_svc.dim_id_for_value('dim_date_month', int(tokens[0])),

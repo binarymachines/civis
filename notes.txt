@@ -1,0 +1,101 @@
+SELECT COUNT(*)
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+ JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id 
+ JOIN ref_party rp ON rp.id = v.ref_party_id 
+ WHERE fv.event_datestamp > '01-01-2019' 
+ AND rp.id = 2;
+
+
+
+
+ SELECT v.first_name, v.last_name, v.house_number, v.street, v.apartment, 
+   v.zip, rp.label AS PARTY, fv.event_datestamp as ELECTION_DATE
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+ JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id 
+ JOIN ref_party rp ON rp.id = v.ref_party_id 
+ WHERE fv.event_datestamp > '01-01-2019' 
+ AND rp.id = 2;
+
+
+  SELECT v.first_name, v.last_name, v.house_number, v.street, v.apartment, 
+   v.zip, rp.label AS PARTY, fv.event_datestamp as ELECTION_DATE
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+ JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id 
+ JOIN ref_party rp ON rp.id = v.ref_party_id 
+ WHERE fv.event_datestamp > '01-01-2019' 
+ AND rp.id = 2;
+
+
+SELECT count(v.id) 
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+ JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id 
+ JOIN ref_party rp ON rp.id = v.ref_party_id 
+ WHERE fv.event_datestamp > '01-01-2019' 
+ AND rp.id = 2;
+
+
+ SELECT v.first_name, v.last_name, 
+    count(v.id) OVER (PARTITION BY depname ORDER BY salary DESC)
+FROM empsalary;
+
+
+
+
+HEADER true;
+
+
+SELECT
+	v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip,
+	COUNT(fv.event_datestamp) as times_voted
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+    INNER JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id
+    INNER JOIN ref_party rp ON rp.id = v.ref_party_id
+    WHERE fv.event_datestamp > '01-01-2019' AND fv.event_datestamp < '12-01-2020'
+    AND rp.id = 1
+    GROUP BY v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip
+ ORDER BY
+	times_voted DESC;
+
+
+
+
+SELECT count(v.id) FROM
+SELECT v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip,
+	COUNT(fv.event_datestamp) as times_voted
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+    INNER JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id
+    INNER JOIN ref_party rp ON rp.id = v.ref_party_id
+    WHERE fv.event_datestamp > '01-01-2021' AND fv.event_datestamp < '12-01-2021'
+    AND rp.id = 1
+    GROUP BY v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip;
+
+
+-- Sample query:
+-- Who were the most active REPUBLICAN voters between Jan 1 2019 and Dec 1 2020?
+
+SELECT
+	v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip,
+	COUNT(fv.event_datestamp) as times_voted
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+    INNER JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id
+    INNER JOIN ref_party rp ON rp.id = v.ref_party_id
+    WHERE fv.event_datestamp > '01-01-2019'
+    AND fv.event_datestamp < '12-01-2020' 
+    AND rp.id = 2 
+    GROUP BY v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip
+ ORDER BY
+	times_voted DESC;
+
+
+
+   SELECT
+	v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip,
+	COUNT(fv.event_datestamp) as times_voted
+ FROM voters v JOIN fact_vote fv ON fv.voter_id = v.id
+    INNER JOIN dim_date_year ddy ON fv.dim_date_year_id = ddy.id
+    INNER JOIN ref_party rp ON rp.id = v.ref_party_id
+    WHERE fv.event_datestamp > '01-01-2019' 
+    AND v.id = '5c50b9fc-ad27-41d7-a2d0-d78ec14a66b7'
+    GROUP BY v.id, v.first_name, v.last_name, v.house_number, v.street, v.apartment, v.zip
+ ORDER BY
+	times_voted DESC;
